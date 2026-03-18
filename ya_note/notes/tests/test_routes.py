@@ -42,13 +42,18 @@ class TestRoutes(TestCase):
         urls = (
             self.URL_NOTES_HOME,
             self.URL_USERS_LOGIN,
-            self.URL_USERS_LOGOUT,
             self.URL_USERS_SIGNUP,
         )
         for url in urls:
-            with self.subTest():
+            with self.subTest(url=url):
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
+        # Django 5: logout принимает только POST
+        response = self.client.post(self.URL_USERS_LOGOUT)
+        self.assertIn(
+            response.status_code,
+            (HTTPStatus.OK, HTTPStatus.FOUND)
+        )
 
     def test_pages_availability_for_auth_user(self):
         # Аутентифицированному пользователю доступна страница со списком

@@ -66,9 +66,8 @@ class TestCommentCreation(TestCase):
         )
         self.assertFormError(
             response,
-            'form',
             'slug',
-            errors=(self.note.slug + WARNING)
+            (self.note.slug + WARNING)
         )
         self.assertEqual(Note.objects.count(), self.NOTES_BEFORE_REQUEST)
 

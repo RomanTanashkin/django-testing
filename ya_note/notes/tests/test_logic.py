@@ -65,7 +65,7 @@ class TestCommentCreation(TestCase):
             data=self.form_data
         )
         self.assertFormError(
-            response,
+            response.context['form'],
             'slug',
             (self.note.slug + WARNING)
         )

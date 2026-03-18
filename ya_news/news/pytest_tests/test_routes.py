@@ -26,7 +26,9 @@ def test_logout_availability_for_anonymous_user(client, url_user_logout):
     # Страница выхода из учётной записи доступна анонимным пользователям
     # Django 5 принимает logout только через POST
     response = client.post(url_user_logout)
-    assert response.status_code == HTTPStatus.OK or response.status_code == HTTPStatus.FOUND
+    assert response.status_code in (
+        HTTPStatus.OK, HTTPStatus.FOUND
+    )
 
 
 @pytest.mark.django_db

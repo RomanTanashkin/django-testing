@@ -44,7 +44,7 @@ def test_user_cant_use_bad_words(url_news_detail, admin_client):
     bad_words_data = {'text': f'Текст, {choice(BAD_WORDS)}, еще текст'}
     response = admin_client.post(url_news_detail, data=bad_words_data)
     assertFormError(
-        response,
+        response.context['form'],
         'text',
         errors=WARNING
     )

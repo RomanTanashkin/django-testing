@@ -9,7 +9,6 @@ from pytest_django.asserts import assertRedirects
     (
         pytest.lazy_fixture('url_news_home'),
         pytest.lazy_fixture('url_user_login'),
-        pytest.lazy_fixture('url_user_logout'),
         pytest.lazy_fixture('url_user_signup'),
     )
 )
@@ -17,9 +16,17 @@ from pytest_django.asserts import assertRedirects
 def test_pages_availability_for_anonymous_user(client, url):
     # Главная страница доступна анонимному пользователю.
     # Страницы регистрации пользователей, входа в учётную запись
-    # и выхода из неё доступны анонимным пользователям
+    # доступны анонимным пользователям
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
+
+
+@pytest.mark.django_db
+def test_logout_availability_for_anonymous_user(client, url_user_logout):
+    # Страница выхода из учётной записи доступна анонимным пользователям
+    # Django 5 принимает logout только через POST
+    response = client.post(url_user_logout)
+    assert response.status_code == HTTPStatus.OK or response.status_code == HTTPStatus.FOUND
 
 
 @pytest.mark.django_db

@@ -22,7 +22,9 @@ def test_anonymous_user_cant_create_comment(url_news_detail, client):
     assert comments_count == COMMENTS_BEFORE_REQUEST
 
 
-def test_user_can_create_comment(url_news_detail, admin_client, admin_user, news):
+def test_user_can_create_comment(
+    url_news_detail, admin_client, admin_user, news
+):
     """Авторизованный пользователь может отправить комментарий."""
     COMMENTS_BEFORE_REQUEST = comments_before_request()
     response = admin_client.post(url_news_detail, data=form_data)
@@ -37,7 +39,10 @@ def test_user_can_create_comment(url_news_detail, admin_client, admin_user, news
 
 @pytest.mark.parametrize('bad_word', BAD_WORDS)
 def test_user_cant_use_bad_words(url_news_detail, admin_client, bad_word):
-    """Комментарий с запрещёнными словами не публикуется, форма возвращает ошибку."""
+    """Комментарий с запрещёнными словами не публикуется.
+
+    Форма возвращает ошибку.
+    """
     COMMENTS_BEFORE_REQUEST = comments_before_request()
     bad_words_data = {'text': f'Текст, {bad_word}, еще текст'}
     response = admin_client.post(url_news_detail, data=bad_words_data)

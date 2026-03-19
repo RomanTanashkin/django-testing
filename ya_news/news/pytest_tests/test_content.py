@@ -22,7 +22,10 @@ def test_news_order(eleven_news, url_news_home, client):
 
 
 def test_comments_order(news_with_ten_comments, url_news_detail, client):
-    """Комментарии отсортированы хронологически: старые — в начале, новые — в конце."""
+    """Комментарии отсортированы хронологически.
+
+    Старые — в начале, новые — в конце.
+    """
     response = client.get(url_news_detail)
     assert 'news' in response.context
     news = response.context['news']

@@ -1,29 +1,17 @@
 from http import HTTPStatus
 
-from django.test import Client, TestCase
 from django.urls import reverse
 from notes.forms import WARNING
 from notes.models import Note
-from notes.tests.test_routes import User
+from notes.tests import BaseTestCase
 from pytils.translit import slugify
 
 
-class TestCommentCreation(TestCase):
+class TestCommentCreation(BaseTestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.author = User.objects.create(username='Автор')
-        cls.reader = User.objects.create(username='Читатель')
-        cls.author_logged = Client()
-        cls.reader_logged = Client()
-        cls.author_logged.force_login(cls.author)
-        cls.reader_logged.force_login(cls.reader)
-        cls.note = Note.objects.create(
-            title='Заголовок',
-            text='Текст заметки',
-            slug='note-slug',
-            author=cls.author,
-        )
+        super().setUpTestData()
         cls.form_data = {
             'title': 'Новый заголовок',
             'text': 'Новый текст',
@@ -65,8 +53,7 @@ class TestCommentCreation(TestCase):
             data=self.form_data
         )
         self.assertFormError(
-            response.context['form'],
-            'slug',
+            response, 'form', 'slug',
             (self.note.slug + WARNING)
         )
         self.assertEqual(Note.objects.count(), self.NOTES_BEFORE_REQUEST)

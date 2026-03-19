@@ -1,29 +1,14 @@
 from http import HTTPStatus
 
-from django.contrib.auth import get_user_model
-from django.test import Client, TestCase
 from django.urls import reverse
-from notes.models import Note
-
-User = get_user_model()
+from notes.tests import BaseTestCase
 
 
-class TestRoutes(TestCase):
+class TestRoutes(BaseTestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.author = User.objects.create(username='Автор')
-        cls.reader = User.objects.create(username='Читатель')
-        cls.author_logged = Client()
-        cls.reader_logged = Client()
-        cls.author_logged.force_login(cls.author)
-        cls.reader_logged.force_login(cls.reader)
-        cls.note = Note.objects.create(
-            title='Заголовок',
-            text='Текст заметки',
-            slug='note-slug',
-            author=cls.author,
-        )
+        super().setUpTestData()
         cls.URL_NOTES_HOME = reverse('notes:home')
         cls.URL_USERS_LOGIN = reverse('users:login')
         cls.URL_USERS_LOGOUT = reverse('users:logout')

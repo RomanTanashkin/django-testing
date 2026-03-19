@@ -10,6 +10,11 @@ from news.models import Comment, News
 COMMENT_TEXT = 'Текст комментария'
 
 
+@pytest.fixture(autouse=True)
+def enable_db_access(db):
+    pass
+
+
 @pytest.fixture
 def author(django_user_model):
     return django_user_model.objects.create(username='Автор')

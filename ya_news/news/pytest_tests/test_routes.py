@@ -12,28 +12,22 @@ from pytest_django.asserts import assertRedirects
         pytest.lazy_fixture('url_user_signup'),
     )
 )
-@pytest.mark.django_db
 def test_pages_availability_for_anonymous_user(client, url):
-    # Главная страница доступна анонимному пользователю.
-    # Страницы регистрации пользователей, входа в учётную запись
-    # доступны анонимным пользователям
+    """Главная, страницы регистрации и входа доступны анонимному пользователю."""
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
 
 
-@pytest.mark.django_db
 def test_logout_availability_for_anonymous_user(client, url_user_logout):
-    # Страница выхода из учётной записи доступна анонимным пользователям
-    # Django 5 принимает logout только через POST
+    """Страница выхода из учётной записи доступна анонимным пользователям."""
     response = client.post(url_user_logout)
     assert response.status_code in (
         HTTPStatus.OK, HTTPStatus.FOUND
     )
 
 
-@pytest.mark.django_db
 def test_detail_page_availability(url_news_detail, client):
-    # Страница отдельной новости доступна анонимному пользователю
+    """Страница отдельной новости доступна анонимному пользователю."""
     response = client.get(url_news_detail)
     assert response.status_code == HTTPStatus.OK
 
@@ -55,10 +49,7 @@ def test_detail_page_availability(url_news_detail, client):
 def test_pages_availability_for_different_users(
         parametrized_client, url, expected_status
 ):
-    # Страницы удаления и редактирования комментария доступны автору
-    # комментария.
-    # Авторизованный пользователь не может зайти на страницы редактирования
-    # или удаления чужих комментариев (возвращается ошибка 404)
+    """Страницы редактирования и удаления комментария доступны только автору."""
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
 
@@ -70,11 +61,8 @@ def test_pages_availability_for_different_users(
         pytest.lazy_fixture('url_comment_delete'),
     ),
 )
-@pytest.mark.django_db
 def test_redirects(url, url_user_login, client):
-    # При попытке перейти на страницу редактирования или удаления
-    # комментария анонимный пользователь перенаправляется на
-    # страницу авторизации
+    """Анонимный пользователь перенаправляется на страницу авторизации."""
     expected_url = f'{url_user_login}?next={url}'
     response = client.get(url)
     assertRedirects(response, expected_url)

@@ -52,9 +52,11 @@ class TestCommentCreation(BaseTestCase):
             self.URL_NOTES_ADD,
             data=self.form_data
         )
-        self.assertFormError(
-            response, 'form', 'slug',
-            (self.note.slug + WARNING)
+        form_errors = response.context['form'].errors
+        self.assertIn('slug', form_errors)
+        self.assertIn(
+            self.note.slug + WARNING,
+            form_errors['slug']
         )
         self.assertEqual(Note.objects.count(), self.NOTES_BEFORE_REQUEST)
 

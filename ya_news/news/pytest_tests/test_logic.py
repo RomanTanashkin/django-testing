@@ -4,7 +4,7 @@ import pytest
 from news.forms import BAD_WORDS, WARNING
 from news.models import Comment
 from news.pytest_tests.conftest import COMMENT_TEXT
-from pytest_django.asserts import assertFormError, assertRedirects
+from pytest_django.asserts import assertRedirects
 
 NEW_COMMENT_TEXT = 'Новый текст комментария'
 form_data = {'text': NEW_COMMENT_TEXT}
@@ -46,7 +46,8 @@ def test_user_cant_use_bad_words(url_news_detail, admin_client, bad_word):
     COMMENTS_BEFORE_REQUEST = comments_before_request()
     bad_words_data = {'text': f'Текст, {bad_word}, еще текст'}
     response = admin_client.post(url_news_detail, data=bad_words_data)
-    assertFormError(response, 'form', 'text', WARNING)
+    assert 'text' in response.context['form'].errors
+    assert WARNING in response.context['form'].errors['text']
     comments_count = Comment.objects.count()
     assert comments_count == COMMENTS_BEFORE_REQUEST
 

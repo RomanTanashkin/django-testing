@@ -1,76 +1,33 @@
-# Описание
-Тестирование проектов YaNote и YaNews на unittest и pytest соответственно.
+# Django testing: YaNews & YaNote
 
-# Стек:
-python, pytest, unittest
+Two complete test suites for two Django applications, written with the two major Python test frameworks:
 
-# Как развернуть проект
-Клонировать репозиторий и перейти в него в командной строке:
-```
-git clone git@github.com:RomanTanashkin/django-testing.git
-```
+| Project | Framework | Tests |
+|---|---|---|
+| `ya_news` — news site with comments | **pytest** + pytest-django | 24 |
+| `ya_note` — personal notes with authentication | **unittest** (Django `TestCase`) | 14 |
 
-```
-cd django_testing
-```
+Each suite covers the same three areas: **routes** (availability and redirects for anonymous, authenticated and author users), **content** (context data, ordering, pagination, form presence) and **logic** (create/edit/delete permissions, bad-word filtering, duplicate slugs).
 
-Cоздать и активировать виртуальное окружение:
+Built during the *Python Developer* course at Yandex Practicum (2025–2026). Every project was reviewed and accepted by a course mentor.
 
-```
-python3 -m venv env
-```
+## Tech stack
 
-```
-source env/bin/activate
-```
+Python 3 · Django · pytest · pytest-django · unittest
 
-Установить зависимости из файла requirements.txt:
+## Run the tests
 
-```
-python3 -m pip install --upgrade pip
-```
-
-```
+```bash
+python -m venv venv
+source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+
+cd ya_news && pytest && cd ..
+cd ya_note && python manage.py test && cd ..
 ```
 
-# Структура репозитория:
-```
-Dev
- └── django_testing
-     ├── ya_news
-     │   ├── news
-     │   │   ├── fixtures/
-     │   │   ├── migrations/
-     │   │   ├── pytest_tests/   <- Директория с тестами pytest
-     │   │   ├── __init__.py
-     │   │   ├── admin.py
-     │   │   ├── apps.py
-     │   │   ├── forms.py
-     │   │   ├── models.py
-     │   │   ├── urls.py
-     │   │   └── views.py
-     │   ├── templates/
-     │   ├── yanews/
-     │   ├── manage.py
-     │   └── pytest.ini
-     ├── ya_note
-     │   ├── notes
-     │   │   ├── migrations/
-     │   │   ├── tests/          <- Директория с тестами unittest
-     │   │   ├── __init__.py
-     │   │   ├── admin.py
-     │   │   ├── apps.py
-     │   │   ├── forms.py
-     │   │   ├── models.py
-     │   │   ├── urls.py
-     │   │   └── views.py
-     │   ├── templates/
-     │   ├── yanote/
-     │   ├── manage.py
-     │   └── pytest.ini
-     ├── .gitignore
-     ├── README.md
-     ├── requirements.txt
-     └── structure_test.py
-```
+`run_tests.sh` runs both suites in one go.
+
+## Author
+
+Roman Tanashkin — [github.com/RomanTanashkin](https://github.com/RomanTanashkin)

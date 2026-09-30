@@ -2,7 +2,7 @@ from django.conf import settings
 
 
 def test_news_count(eleven_news, url_news_home, client):
-    """Количество новостей на главной странице — не более 10."""
+    """The home page shows no more than 10 news items."""
     response = client.get(url_news_home)
     object_list = response.context['object_list']
     news_count = object_list.count()
@@ -10,9 +10,9 @@ def test_news_count(eleven_news, url_news_home, client):
 
 
 def test_news_order(eleven_news, url_news_home, client):
-    """Новости отсортированы от самой свежей к самой старой.
+    """News items are sorted from newest to oldest.
 
-    Свежие новости в начале списка.
+    The newest news items come first.
     """
     response = client.get(url_news_home)
     object_list = response.context['object_list']
@@ -22,9 +22,9 @@ def test_news_order(eleven_news, url_news_home, client):
 
 
 def test_comments_order(news_with_ten_comments, url_news_detail, client):
-    """Комментарии отсортированы хронологически.
+    """Comments are sorted chronologically.
 
-    Старые — в начале, новые — в конце.
+    Oldest first, newest last.
     """
     response = client.get(url_news_detail)
     assert 'news' in response.context
@@ -36,13 +36,13 @@ def test_comments_order(news_with_ten_comments, url_news_detail, client):
 
 
 def test_anonymous_client_has_no_form(url_news_detail, client):
-    """Анонимному пользователю недоступна форма для отправки комментария."""
+    """An anonymous user does not see the comment form."""
     response = client.get(url_news_detail)
     assert 'form' not in response.context
 
 
 def test_authorized_client_has_form(url_news_detail, author_client):
-    """Авторизованному пользователю доступна форма для отправки комментария."""
+    """An authorised user sees the comment form."""
     response = author_client.get(url_news_detail)
     assert 'form' in response.context
     assert type(response.context['form']).__name__ == 'CommentForm'

@@ -15,7 +15,7 @@ def comments_before_request():
 
 
 def test_anonymous_user_cant_create_comment(url_news_detail, client):
-    """Анонимный пользователь не может отправить комментарий."""
+    """An anonymous user cannot post a comment."""
     COMMENTS_BEFORE_REQUEST = comments_before_request()
     client.post(url_news_detail, data=form_data)
     comments_count = Comment.objects.count()
@@ -25,7 +25,7 @@ def test_anonymous_user_cant_create_comment(url_news_detail, client):
 def test_user_can_create_comment(
     url_news_detail, admin_client, admin_user, news
 ):
-    """Авторизованный пользователь может отправить комментарий."""
+    """An authorised user can post a comment."""
     COMMENTS_BEFORE_REQUEST = comments_before_request()
     response = admin_client.post(url_news_detail, data=form_data)
     assertRedirects(response, f'{url_news_detail}#comments')
@@ -39,9 +39,9 @@ def test_user_can_create_comment(
 
 @pytest.mark.parametrize('bad_word', BAD_WORDS)
 def test_user_cant_use_bad_words(url_news_detail, admin_client, bad_word):
-    """Комментарий с запрещёнными словами не публикуется.
+    """A comment containing forbidden words is not published.
 
-    Форма возвращает ошибку.
+    The form returns an error.
     """
     COMMENTS_BEFORE_REQUEST = comments_before_request()
     bad_words_data = {'text': f'Текст, {bad_word}, еще текст'}
@@ -57,7 +57,7 @@ def test_author_can_delete_comment(
     url_news_detail,
     author_client
 ):
-    """Авторизованный пользователь может удалять свои комментарии."""
+    """An authorised user can delete their own comments."""
     COMMENTS_BEFORE_REQUEST = comments_before_request()
     response = author_client.delete(url_comment_delete)
     assertRedirects(response, f'{url_news_detail}#comments')
@@ -69,7 +69,7 @@ def test_user_cant_delete_comment_of_another_user(
     url_comment_delete,
     admin_client
 ):
-    """Авторизованный пользователь не может удалять чужие комментарии."""
+    """An authorised user cannot delete other users' comments."""
     COMMENTS_BEFORE_REQUEST = comments_before_request()
     response = admin_client.delete(url_comment_delete)
     assert response.status_code == HTTPStatus.NOT_FOUND
@@ -85,7 +85,7 @@ def test_author_can_edit_comment(
     news,
     author_client
 ):
-    """Авторизованный пользователь может редактировать свои комментарии."""
+    """An authorised user can edit their own comments."""
     response = author_client.post(url_comment_edit, data=form_data)
     assertRedirects(response, f'{url_news_detail}#comments')
     comment.refresh_from_db()
@@ -101,7 +101,7 @@ def test_user_cant_edit_comment_of_another_user(
     news,
     admin_client
 ):
-    """Авторизованный пользователь не может редактировать чужие комментарии."""
+    """An authorised user cannot edit other users' comments.
     response = admin_client.post(url_comment_edit, data=form_data)
     assert response.status_code == HTTPStatus.NOT_FOUND
     comment.refresh_from_db()

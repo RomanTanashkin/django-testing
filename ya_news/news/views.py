@@ -9,15 +9,15 @@ from .models import Comment, News
 
 
 class NewsList(generic.ListView):
-    """Список новостей."""
+    """News list."""
     model = News
     template_name = 'news/home.html'
 
     def get_queryset(self):
         """
-        Выводим только несколько последних новостей.
+        Show only a few of the latest news items.
 
-        Их количество определяется в настройках проекта.
+        Their number is defined in the project settings.
         """
         return self.model.objects.prefetch_related(
             'comment_set'
@@ -79,7 +79,7 @@ class NewsDetailView(generic.View):
 
 
 class CommentBase(LoginRequiredMixin):
-    """Базовый класс для работы с комментариями."""
+    """Base class for working with comments."""
     model = Comment
 
     def get_success_url(self):
@@ -89,16 +89,16 @@ class CommentBase(LoginRequiredMixin):
         ) + '#comments'
 
     def get_queryset(self):
-        """Пользователь может работать только со своими комментариями."""
+        """A user can only work with their own comments."""
         return self.model.objects.filter(author=self.request.user)
 
 
 class CommentUpdate(CommentBase, generic.UpdateView):
-    """Редактирование комментария."""
+    """Edit a comment."""
     template_name = 'news/edit.html'
     form_class = CommentForm
 
 
 class CommentDelete(CommentBase, generic.DeleteView):
-    """Удаление комментария."""
+    """Delete a comment."""
     template_name = 'news/delete.html'
